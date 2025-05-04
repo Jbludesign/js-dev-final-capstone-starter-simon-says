@@ -118,12 +118,29 @@ startButton.addEventListener("click", startButtonHandler);
  *
  * 6. Return the `color` variable as the output
  */
-function padHandler(event) {
-  const { color } = event.target.dataset;
-  if (!color) return;
+ function padHandler(event) {
+  const clickedPad = event.target;
+  const clickedColor = clickedPad.dataset.color; // Assuming pads have a data attribute for color
+  
+  if (!clickedColor) return; // Ignore clicks outside pads
 
-  // TODO: Write your code here.
-  return color;
+  // Check if the player's input matches the expected sequence
+  const expectedColor = computerSequence[playerSequence.length];
+
+  if (clickedColor === expectedColor) {
+    playerSequence.push(clickedColor); // Track correct input
+
+    activatePad(clickedColor); // Give visual + audio feedback
+
+    // Check if the round is complete
+    if (playerSequence.length === computerSequence.length) {
+      roundCount++;
+      setTimeout(() => playComputerTurn(), 1000); // Move to the next round
+    }
+  } else {
+    setText(statusSpan, "Oops! Wrong pad. Try again!");
+    resetGame(); // Handle incorrect input
+  }
 }
 
 /**
@@ -302,7 +319,12 @@ function playComputerTurn() {
  * 2. Display a status message showing the player how many presses are left in the round
  */
 function playHumanTurn() {
-  // TODO: Write your code here.
+  // 1. Make pads clickable again by removing the "unclickable" class
+  padContainer.classList.remove("unclickable");
+
+  // 2. Update the status message to show presses left in the round
+  const pressesLeft = computerSequence.length; // Player needs to match the computer's sequence
+  setText(statusSpan, `Your turn! ${pressesLeft} presses to complete the round.`);
 }
 
 /**
@@ -328,7 +350,28 @@ function playHumanTurn() {
  *
  */
 function checkPress(color) {
-  // TODO: Write your code here.
+  // 1. Add the selected color to the player's sequence
+  playerSequence.push(color);
+
+  // 2. Get the index of the latest press
+  const index = playerSequence.length - 1;
+
+  // 3. Calculate remaining presses
+  const remainingPresses = computerSequence.length - playerSequence.length;
+
+  // 4. Update the status message
+  setText(statusSpan, `Your turn! ${remainingPresses} presses left.`);
+
+  // 5. Check if the player's press matches the expected sequence
+  if (playerSequence[index] !== computerSequence[index]) {
+    resetGame("Oops! Wrong pad. Try again!");
+    return;
+  }
+
+  // 6. If no presses are left, check the round result
+  if (remainingPresses === 0) {
+    checkRound();
+  }
 }
 
 /**
@@ -347,7 +390,21 @@ function checkPress(color) {
  */
 
 function checkRound() {
-  // TODO: Write your code here.
+  // 1. Check if the player has completed all rounds
+  if (playerSequence.length === maxRoundCount) {
+    resetGame("Congratulations! You've won the game!");
+    return;
+  }
+
+  // 2. Increment round count and reset player sequence
+  roundCount++;
+  playerSequence = [];
+
+  // Update the status message
+  setText(statusSpan, "Nice! Keep going!");
+
+  // 3. Delay before the computer plays the next round
+  setTimeout(() => playComputerTurn(), 1000);
 }
 
 /**
@@ -360,14 +417,19 @@ function checkRound() {
  * 3. Reset `roundCount` to an empty array
  */
 function resetGame(text) {
-  // TODO: Write your code here.
+  // 1. Reset game variables
+  computerSequence = [];
+  playerSequence = [];
+  roundCount = 1;
 
-  // Uncomment the code below:
-  // alert(text);
-  // setText(heading, "Simon Says");
-  // startButton.classList.remove("hidden");
-  // statusSpan.classList.add("hidden");
-  // padContainer.classList.add("unclickable");
+  // 2. Show game reset message
+  alert(text);
+
+  // 3. Reset UI elements
+  setText(heading, "Simon Says");
+  startButton.classList.remove("hidden");
+  statusSpan.classList.add("hidden");
+  padContainer.classList.add("unclickable");
 }
 
 /**
