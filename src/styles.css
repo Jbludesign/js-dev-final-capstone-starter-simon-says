@@ -11,7 +11,7 @@ html {
 }
 
 body {
-  color: yellow;
+  color: rgba(21, 0, 255, 0.433);
   font-family: 'Rubik Microbe', sans-serif;
   display: flex;
   justify-content: center;
@@ -26,7 +26,7 @@ main {
 
 h1 {
   text-align: center;
-  font-size: 40px;
+  font-size: 50px;
 }
 
 .blu {
@@ -43,13 +43,13 @@ h1 {
   display: inline-block;
   height: 38px;
   padding: 0 30px;
-  color: rgb(0, 255, 255);
+  color: rgb(244, 249, 249);
   text-align: center;
   font-size: 14px;
   font-weight: 600;
   text-transform: uppercase;
   background-color: transparent;
-  border: 1px solid yellow;
+  border: 1px solid rgb(0, 191, 255);
   cursor: pointer;
 }
 
@@ -92,7 +92,9 @@ h1 {
 .pad-green {
   border-top-right-radius: 200px;
   background-color: green;
+  transform: rotate(180deg); 
 }
+
 
 .pad-green:hover,
 .pad-green:focus {
@@ -126,7 +128,9 @@ h1 {
 .pad-blue {
   border-bottom-left-radius: 200px;
   background-color: blue;
+  transform: rotate(180deg); 
 }
+
 
 .pad-blue:hover,
 .pad-blue:focus {
